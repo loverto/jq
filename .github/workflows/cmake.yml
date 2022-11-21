@@ -68,6 +68,6 @@ jobs:
         # Artifact name
         name:  jq-all-deps-fedora_latest_aarch64 # optional, default is artifact
         # A file, directory or wildcard pattern that describes what to upload
-        path: "${PWD}/artifacts"
+        path: /home/runner/work/jq/jq/artifacts
         # The desired behavior if no files are found using the provided path.
    
