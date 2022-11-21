@@ -56,7 +56,6 @@ jobs:
         # Set an output parameter `uname` for use in subsequent steps
         run: |
           yumdownloader jq --resolve --destdir=${PWD}
-          cp -r ${PWD} "/artifacts/${artifact_name}"
           echo "Produced artifact at /artifacts/${artifact_name}"
     - name: Show the artifact
       # Items placed in /artifacts in the container will be in
