@@ -50,7 +50,7 @@ jobs:
         # no secrets are present in the container state or logs.
         install: |
           yum -y update
-          yum install yum-utils
+          yum -y install yum-utils
           
 
         # Set an output parameter `uname` for use in subsequent steps
