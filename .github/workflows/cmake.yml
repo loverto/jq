@@ -25,6 +25,18 @@ jobs:
       with:
         arch: aarch64
         distro: fedora_latest
+        
+        # Create an artifacts directory
+        setup: |
+          mkdir -p "${PWD}/artifacts"
+
+        # Mount the artifacts directory as /artifacts in the container
+        dockerRunArgs: |
+          --volume "${PWD}/artifacts:/artifacts"
+          
+        # Pass some environment variables to the container
+        env: | # YAML, but pipe character is necessary
+          artifact_name: jq-all-deps-fedora_latest_aarch64
 
         # Not required, but speeds up builds by storing container images in
         # a GitHub package registry.
@@ -37,15 +49,17 @@ jobs:
         # publicly in your project's package repository, so it is vital that
         # no secrets are present in the container state or logs.
         install: |
-              yum -y update
-              yum -y install git which
+          yum -y update
+          yum install yum-utils
+          
 
         # Set an output parameter `uname` for use in subsequent steps
         run: |
-          uname -a
-          echo ::set-output name=uname::$(uname -a)
-
-    - name: Get the output
-      # Echo the `uname` output parameter from the `runcmd` step
+          yumdownloader jq
+          cp "${PWD}*.rpm" "/artifacts/${artifact_name}"
+          echo "Produced artifact at /artifacts/${artifact_name}"
+    - name: Show the artifact
+      # Items placed in /artifacts in the container will be in
+      # ${PWD}/artifacts on the host.
       run: |
-        echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
+        ls -al "${PWD}/artifacts"
