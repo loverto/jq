@@ -29,7 +29,6 @@ jobs:
         # Create an artifacts directory
         setup: |
           mkdir -p "${PWD}/artifacts"
-
         # Mount the artifacts directory as /artifacts in the container
         dockerRunArgs: |
           --volume "${PWD}/artifacts:/artifacts"
@@ -37,7 +36,6 @@ jobs:
         # Pass some environment variables to the container
         env: | # YAML, but pipe character is necessary
           artifact_name: jq-all-deps-fedora_latest_aarch64
-
         # Not required, but speeds up builds by storing container images in
         # a GitHub package registry.
         githubToken: ${{ github.token }}
@@ -52,11 +50,10 @@ jobs:
           yum -y update
           yum -y install yum-utils
           
-
         # Set an output parameter `uname` for use in subsequent steps
         run: |
-          yum deplist redis-cli
-          repotrack redis-cli -p ${PWD}/artifacts
+          yum list redis-cli --showduplicates | sort -r
+          yumdownloader redis-cli --resolve --destdir=${PWD}/artifacts
           echo "Produced artifact at /artifacts/${artifact_name}"
     - name: Show the artifact
       # Items placed in /artifacts in the container will be in
@@ -67,8 +64,8 @@ jobs:
       uses: actions/upload-artifact@v3.1.1
       with:
         # Artifact name
-        name:  redis-cli-all-deps-fedora_latest_aarch64 # optional, default is artifact
+        name:  jq-all-deps-fedora_latest_aarch64 # optional, default is artifact
         # A file, directory or wildcard pattern that describes what to upload
-        path: /home/runner/work/redis-cli/redis-cli/artifacts
+        path: /home/runner/work/jq/jq/artifacts
         # The desired behavior if no files are found using the provided path.
    
