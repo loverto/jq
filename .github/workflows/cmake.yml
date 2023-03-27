@@ -52,8 +52,8 @@ jobs:
           
         # Set an output parameter `uname` for use in subsequent steps
         run: |
-          yum list redis --showduplicates | sort -r
-          yumdownloader redis --resolve --destdir=${PWD}/artifacts
+          yum list ansible --showduplicates | sort -r
+          yumdownloader ansible --resolve --destdir=${PWD}/artifacts
           echo "Produced artifact at /artifacts/${artifact_name}"
     - name: Show the artifact
       # Items placed in /artifacts in the container will be in
